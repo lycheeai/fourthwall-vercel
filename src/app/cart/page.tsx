@@ -1,7 +1,4 @@
 'use client';
-import Image from 'next/image'
-import Showcase from '../components/showcase'
-import Products from '../components/products'
 import Header from '../components/header'
 import Footer from '../components/footer'
 import { ChevronDown, X } from 'lucide-react'
@@ -39,7 +36,7 @@ const CartItem = ({ name, size, color, quantity, price, image }: CartItemProps) 
 
 const CartPage = () => {
 
-  const { cart, variantTotal } = useAppContext();
+  const { cart, checkout } = useAppContext();
   const cartItems = cart;
   const subtotal = cartItems.reduce((sum, item) => sum + item.price.value * item.quantity, 0);
 
@@ -76,7 +73,9 @@ const CartPage = () => {
         <a href="/" className="text-center bg-gray-800 text-white py-3 px-6 w-1/2 font-bold hover:bg-gray-700 transition-colors">
           BACK TO SHOPPING
         </a>
-        <button className="bg-red-600 text-white py-3 px-6 w-1/2 font-bold hover:bg-red-700 transition-colors">
+        <button 
+          onClick={checkout} 
+          className="bg-red-600 text-white py-3 px-6 w-1/2 font-bold hover:bg-red-700 transition-colors">
           CHECKOUT
         </button>
       </div>

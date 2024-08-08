@@ -1,12 +1,14 @@
 'use client';
 import React, { useCallback, useMemo } from "react";
 import { Product } from "./fetch";
+import { addToCart } from "./checkout";
 
 type AppContext = {
   addVariant: (variant: string) => void,
   variantTotal: number,
   products: Product[],
   cart: CartItem[],
+  checkout: () => void,
 }
 
 const Context = React.createContext<AppContext>({
@@ -14,6 +16,7 @@ const Context = React.createContext<AppContext>({
   variantTotal: 0,
   products: [],
   cart: [],
+  checkout: () => {},
 });
 
 type AppProviderProps = {
@@ -34,6 +37,7 @@ type CartItem = {
 }
 
 export function AppProvider({ children, products }: AppProviderProps) {
+
   const [variants, setVariants] = React.useState<Record<string, number>>({});
   const addVariant = useCallback((variant: string) => {
     setVariants((prev) => {
@@ -65,8 +69,15 @@ export function AppProvider({ children, products }: AppProviderProps) {
     });
   }, [products, variants]);
 
+  const checkout = async () => {
+    console.log("Checkout", cart);
+    const checkoutId = await addToCart(variants);
+    // redirect
+    window.location.href = `https://jieren-shop.staging.fourthwall.com/checkout/${checkoutId}`;
+  }
+
   return (
-    <Context.Provider value={{ addVariant, variantTotal, cart, products }}>
+    <Context.Provider value={{ addVariant, variantTotal, cart, products, checkout }}>
       {children}
     </Context.Provider>
   );
